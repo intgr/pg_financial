@@ -1,0 +1,34 @@
+{
+    "name": "financial",
+    "abstract": "Financial aggregate functions",
+    "description": "Functions and aggregates for financial calculations",
+    "version": "0.0.1",
+    "release_status": "unstable",
+
+    "maintainer": "Marti Raudsepp <marti@juffo.org>",
+    "generated_by": "Marti Raudsepp <marti@juffo.org>",
+    "provides": {
+    },
+    "license": {
+        "PostgreSQL": "http://www.postgresql.org/about/licence/"
+    },
+    "tags": [
+        "financial", "finance", "rate of return", "xirr", "aggregate",
+        "functions"
+    ],
+    "resources": {
+        "bugtracker": {
+            "web": "https://bitbucket.org/intgr/pg_financial/issues"
+        },
+        "repository": {
+            "url": "https://bitbucket.org/intgr/pg_financial.git",
+            "web": "https://bitbucket.org/intgr/pg_financial",
+            "type": "git"
+        }
+    },
+
+    "meta-spec": {
+        "version": "1.0.0",
+        "url": "http://pgxn.org/meta/spec.txt"
+    }
+}
