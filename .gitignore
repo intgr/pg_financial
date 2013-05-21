@@ -1,0 +1,4 @@
+*.o
+*.so
+sql/financial--?.?.?.sql
+results
