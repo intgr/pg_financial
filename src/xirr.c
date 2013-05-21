@@ -171,9 +171,10 @@ calculate_xirr(XirrState *state)
 			/* What fraction of a year has passed? */
 			double years = (state->array[i].time - time0) / (USECS_PER_DAY * 365.0 /*DAYS_PER_YEAR*/);
 			double val = state->array[i].amount;
+			double exp = pow(r, years);
 
-			result += val / pow(r, years);
-			deriv -= years * val / pow(r, years + 1.0);
+			result += val / exp;
+			deriv -= years * val / (exp * r); /* (exp * r) = pow(r, years + 1) */
 		}
 
 		new_rate = old_rate - (result / deriv);
