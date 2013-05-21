@@ -146,9 +146,16 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
  *
  * Constants are same as used in LibreOffice.
  */
-#define MAX_LOOPS 50
-#define MAX_EPSILON 1e-10
-#define INITIAL_GUESS 0.1
+#define MAX_LOOPS			50
+#define MAX_EPSILON			1e-10
+#define INITIAL_GUESS		0.1
+#define XIRR_DAYS_PER_YEAR	365.0
+
+#ifdef HAVE_INT64_TIMESTAMP
+#	define TIME_PER_YEAR 	(USECS_PER_DAY * XIRR_DAYS_PER_YEAR)
+#else
+#	define TIME_PER_YEAR 	(SECS_PER_DAY * XIRR_DAYS_PER_YEAR)
+#endif
 
 static double
 calculate_xirr(XirrState *state)
@@ -169,7 +176,7 @@ calculate_xirr(XirrState *state)
 		for(i = 1; i < state->nelems; i++)
 		{
 			/* What fraction of a year has passed? */
-			double years = (state->array[i].time - time0) / (USECS_PER_DAY * 365.0 /*DAYS_PER_YEAR*/);
+			double years = (state->array[i].time - time0) / TIME_PER_YEAR;
 			double val = state->array[i].amount;
 			double exp = pow(r, years);
 
