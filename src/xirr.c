@@ -4,15 +4,9 @@
  * xirr.c
  *	  Irregular Internal Rate of Return
  *
- * Copyright (c) 2003-2013, PostgreSQL Global Development Group
- *
- * IDENTIFICATION
- *	  src/backend/utils/adt/array_userfuncs.c
- *
  *-------------------------------------------------------------------------
  */
 
-#define _ISOC99_SOURCE
 #include <math.h>
 
 #include "postgres.h"
@@ -83,7 +77,7 @@ xirr_tstz_transfn(PG_FUNCTION_ARGS)
 		state = (XirrState *) PG_GETARG_POINTER(0);
 
 		/* enlarge array if needed */
-		if(state->nelems >= state->alen)
+		if (state->nelems >= state->alen)
 		{
 			if (!AggCheckCallContext(fcinfo, &aggcontext))
 			{
@@ -135,7 +129,7 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
 
 	ret = calculate_xirr(state);
 
-	if(isnan(ret))
+	if (isnan(ret))
 		PG_RETURN_NULL();
 	else
 		PG_RETURN_FLOAT8(ret);
@@ -160,20 +154,19 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
 static double
 calculate_xirr(XirrState *state)
 {
-	int 		i, j = 0;
+	int 		i, j;
+	double		old_rate = INITIAL_GUESS;
 	TimestampTz time0 = state->array[0].time;
-	double		old_rate = INITIAL_GUESS,
-				new_rate;
 
 	/* Newton's method */
-	for(j = 0; j < MAX_LOOPS; j++)
+	for (j = 0; j < MAX_LOOPS; j++)
 	{
-		double 		deriv = 0.0;
-		double 		result = state->array[0].amount;
-		double 		r = old_rate + 1.0;
-		double		epsilon;
+		double deriv = 0.0;
+		double result = state->array[0].amount;
+		double r = old_rate + 1.0;
+		double epsilon, new_rate;
 
-		for(i = 1; i < state->nelems; i++)
+		for (i = 1; i < state->nelems; i++)
 		{
 			/* What fraction of a year has passed? */
 			double years = (state->array[i].time - time0) / TIME_PER_YEAR;
@@ -189,7 +182,7 @@ calculate_xirr(XirrState *state)
 
 		elog(DEBUG1, "Iteration %2d rate %8g [epsilon %8g]", j, new_rate, epsilon);
 
-		if(!isfinite(result) || epsilon <= MAX_EPSILON || fabs(result) < MAX_EPSILON)
+		if (!isfinite(result) || epsilon <= MAX_EPSILON || fabs(result) < MAX_EPSILON)
 			return new_rate;
 
 		old_rate = new_rate;
