@@ -156,7 +156,7 @@ static double
 calculate_xirr(XirrState *state)
 {
 	int 		i, j;
-	double		old_rate = INITIAL_GUESS;
+	double		guess = INITIAL_GUESS;
 	TimestampTz time0 = state->array[0].time;
 
 	/* Newton's method */
@@ -164,7 +164,7 @@ calculate_xirr(XirrState *state)
 	{
 		double deriv = 0.0;
 		double result = state->array[0].amount;
-		double r = old_rate + 1.0;
+		double r = guess + 1.0;
 		double epsilon, new_rate;
 
 		for (i = 1; i < state->nelems; i++)
@@ -178,15 +178,20 @@ calculate_xirr(XirrState *state)
 			deriv -= years * val / (exp * r); /* (exp * r) = pow(r, years + 1) */
 		}
 
-		new_rate = old_rate - (result / deriv);
-		epsilon = fabs(new_rate - old_rate);
+		new_rate = guess - (result / deriv);
+		epsilon = fabs(new_rate - guess);
 
 		elog(DEBUG1, "Iteration %2d rate %8g [epsilon %8g]", j, new_rate, epsilon);
 
-		if (!isfinite(result) || epsilon <= MAX_EPSILON || fabs(result) < MAX_EPSILON)
+		/* It's not getting any better by adding numbers to infinity */
+		if (!isfinite(new_rate))
+			return NAN;
+
+		if (epsilon <= MAX_EPSILON || fabs(result) < MAX_EPSILON)
 			return new_rate;
 
-		old_rate = new_rate;
+		/* Try another guess, hopefully we're closer now. */
+		guess = new_rate;
 
 		CHECK_FOR_INTERRUPTS();
 	}
