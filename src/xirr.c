@@ -51,9 +51,10 @@ xirr_tstz_transfn(PG_FUNCTION_ARGS)
 	double		amount;
 	TimestampTz	time;
 
-	/* FIXME */
-	Assert(!PG_ARGISNULL(1));
-	Assert(!PG_ARGISNULL(2));
+	if (PG_ARGISNULL(1))
+		elog(ERROR, "xirr amount input cannot be NULL");
+	if (PG_ARGISNULL(2))
+		elog(ERROR, "xirr timestamp input cannot be NULL");
 
 	if (PG_ARGISNULL(0))
 	{

@@ -25,6 +25,10 @@ SELECT xirr(100, '2013-01-01');
      
 (1 row)
 
+SELECT xirr(NULL, '2013-01-01');
+ERROR:  xirr amount input cannot be NULL
+SELECT xirr(100, NULL);
+ERROR:  xirr timestamp input cannot be NULL
 CREATE TEMPORARY TABLE transactions AS
     SELECT -10.0::float8 amt, generate_series(timestamptz '2001-01-01', '2012-01-01', '1 day') ts
     UNION

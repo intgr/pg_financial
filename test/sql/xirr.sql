@@ -7,6 +7,8 @@ SELECT xirr(amt, ts) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (110,
 SELECT xirr(amt, ts) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), ('Infinity', '2013-02-01')) x(amt, ts);
 SELECT xirr(-100, '2013-01-01');
 SELECT xirr(100, '2013-01-01');
+SELECT xirr(NULL, '2013-01-01');
+SELECT xirr(100, NULL);
 
 CREATE TEMPORARY TABLE transactions AS
     SELECT -10.0::float8 amt, generate_series(timestamptz '2001-01-01', '2012-01-01', '1 day') ts
