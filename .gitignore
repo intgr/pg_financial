@@ -1,4 +1,6 @@
 *.o
 *.so
 sql/financial--?.?.?.sql
+regression.diffs
+regression.out
 results
