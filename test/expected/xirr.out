@@ -52,3 +52,10 @@ SELECT xirr(amt, ts) FROM (SELECT amt, ts FROM transactions ORDER BY ts, random(
  7.5587924432
 (1 row)
 
+-- Excel's default guess of 0.1 would fail here, but hey, we're smarter than that
+SELECT xirr(amt, ts) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (20, '2014-01-01')) x(amt, ts);
+ xirr 
+------
+ -0.8
+(1 row)
+

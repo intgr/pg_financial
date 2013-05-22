@@ -27,6 +27,7 @@ typedef struct XirrState
 {
 	int			alen;			/* allocated length of array */
 	int			nelems;			/* number of elements filled in array */
+	double		guess;			/* initial guess for Newton's method */
 	XirrItem	array[0];		/* array of values */
 } XirrState;
 
@@ -34,6 +35,7 @@ typedef struct XirrState
 extern Datum xirr_tstz_transfn(PG_FUNCTION_ARGS);
 extern Datum xirr_tstz_finalfn(PG_FUNCTION_ARGS);
 static double calculate_xirr(XirrState *state);
+static double calculate_annualized_return(XirrState *state);
 
 /**** Implementation */
 
@@ -122,11 +124,14 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
 
 	state = (XirrState *) PG_GETARG_POINTER(0);
 
-	elog(DEBUG1, "Calculating XIRR over %d records, %ld MB memory",
-		 state->nelems, (state->nelems*sizeof(XirrItem))/(1024*1024));
-
-	if (state->nelems < 1)
+	if (state->nelems < 2)
 		PG_RETURN_NULL();
+
+	state->guess = calculate_annualized_return(state);
+
+	elog(DEBUG1, "Calculating XIRR over %d records, %ld MB memory, guess=%g",
+		 state->nelems, (long)((state->nelems*sizeof(XirrItem))/(1024*1024)),
+		 state->guess);
 
 	ret = calculate_xirr(state);
 
@@ -143,7 +148,6 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
  */
 #define MAX_LOOPS			50
 #define MAX_EPSILON			1e-10
-#define INITIAL_GUESS		0.1
 #define XIRR_DAYS_PER_YEAR	365.0
 
 #ifdef HAVE_INT64_TIMESTAMP
@@ -156,7 +160,7 @@ static double
 calculate_xirr(XirrState *state)
 {
 	int 		i, j;
-	double		guess = INITIAL_GUESS;
+	double		guess = state->guess;
 	TimestampTz time0 = state->array[0].time;
 
 	/* Newton's method */
@@ -198,4 +202,42 @@ calculate_xirr(XirrState *state)
 
 	/* Didn't converge */
 	return NAN;
+}
+
+/*
+ * Calculate annualized return, used as the initial guess for Newton's method.
+ *
+ * While this can be calculated incrementally in transfn -- unlike XIRR -- it
+ * probably isn't worth it, since we already have this nice array anyway.
+ *
+ * ((1+sum(amount)/-sum(case when amount<0 then amount end))^(365.0/(max(ts::date)-min(ts::date))))-1
+ */
+static double
+calculate_annualized_return(XirrState *state)
+{
+	int			i;
+	double		debit = 0.0;
+	double		endvalue = 0.0;
+	TimestampTz	mintime, maxtime;
+
+	/* Try to be clever, input is most likely sorted by time. */
+	mintime = state->array[0].time,
+	maxtime = state->array[state->nelems-1].time;
+
+	for (i = 0; i < state->nelems; i++)
+	{
+		double		val = state->array[i].amount;
+		TimestampTz	time = state->array[i].time;
+
+		endvalue += val;
+		if (val < 0.0)
+			debit -= val;
+
+		if (time > maxtime)
+			maxtime = time;
+		else if (time < mintime)
+			mintime = time;
+	}
+
+	return pow(1 + endvalue/debit, TIME_PER_YEAR/(maxtime-mintime)) - 1;
 }
