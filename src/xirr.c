@@ -78,26 +78,36 @@ xirr_tstz_transfn(PG_FUNCTION_ARGS)
 	else
 	{
 		state = (XirrState *) PG_GETARG_POINTER(0);
-
-		/* enlarge array if needed */
-		if (state->nelems >= state->alen)
-		{
-			if (!AggCheckCallContext(fcinfo, &aggcontext))
-			{
-				/* cannot be called directly because of internal-type argument */
-				elog(ERROR, "xirr_tstz_transfn called in non-aggregate context");
-			}
-			oldcontext = MemoryContextSwitchTo(aggcontext);
-
-			state->alen *= 2;
-			state = repalloc(state, sizeof(XirrState) + state->alen * sizeof(XirrItem));
-
-			MemoryContextSwitchTo(oldcontext);
-		}
 	}
 
 	amount = PG_GETARG_FLOAT8(1);
+	if (amount == 0.0)
+		PG_RETURN_POINTER(state);
+
 	time =  PG_GETARG_TIMESTAMPTZ(2);
+
+	/* Coalesce multiple payments on same date */
+	if (time == state->array[state->nelems-1].time)
+	{
+		state->array[state->nelems-1].amount += amount;
+		PG_RETURN_POINTER(state);
+	}
+
+	/* Have to append a new record */
+	if (state->nelems >= state->alen)
+	{
+		if (!AggCheckCallContext(fcinfo, &aggcontext))
+		{
+			/* cannot be called directly because of internal-type argument */
+			elog(ERROR, "xirr_tstz_transfn called in non-aggregate context");
+		}
+		oldcontext = MemoryContextSwitchTo(aggcontext);
+
+		state->alen *= 2;
+		state = repalloc(state, sizeof(XirrState) + state->alen * sizeof(XirrItem));
+
+		MemoryContextSwitchTo(oldcontext);
+	}
 
 	state->array[state->nelems].amount = amount;
 	state->array[state->nelems].time = time;
