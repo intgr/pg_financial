@@ -23,4 +23,6 @@ SELECT xirr(amt, ts) FROM (SELECT sum(amt) as amt, ts FROM transactions GROUP BY
 SELECT xirr(amt, ts) FROM (SELECT amt, ts FROM transactions ORDER BY ts, random()) subq;
 
 -- Excel's default guess of 0.1 would fail here, but hey, we're smarter than that
-SELECT xirr(amt, ts) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (20, '2014-01-01')) x(amt, ts);
+SELECT xirr(amt, ts, null) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (20, '2014-01-01')) x(amt, ts);
+SELECT xirr(amt, ts, 0.1) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (20, '2014-01-01')) x(amt, ts);
+SELECT xirr(amt, ts, -0.9999) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (20, '2014-01-01')) x(amt, ts);

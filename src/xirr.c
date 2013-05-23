@@ -73,6 +73,12 @@ xirr_tstz_transfn(PG_FUNCTION_ARGS)
 		state->alen = initlen;
 		state->nelems = 0;
 
+		/* Optional "guess" argument */
+		if (PG_NARGS() >= 4 && !PG_ARGISNULL(3))
+			state->guess = PG_GETARG_FLOAT8(3);
+		else
+			state->guess = NAN;
+
 		MemoryContextSwitchTo(oldcontext);
 	}
 	else
@@ -137,7 +143,9 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
 	if (state->nelems < 2)
 		PG_RETURN_NULL();
 
-	state->guess = calculate_annualized_return(state);
+	/* Guess not provided as argument? */
+	if (isnan(state->guess))
+		state->guess = calculate_annualized_return(state);
 
 	elog(DEBUG1, "Calculating XIRR over %d records, %ld MB memory, guess=%g",
 		 state->nelems, (long)((state->nelems*sizeof(XirrItem))/(1024*1024)),
