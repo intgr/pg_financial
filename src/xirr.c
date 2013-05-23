@@ -209,7 +209,7 @@ calculate_xirr(XirrState *state, double guess)
 		new_rate = guess - (result / deriv);
 		epsilon = fabs(new_rate - guess);
 
-		elog(DEBUG1, "Iteration %2d rate %8g [epsilon %8g]", j, new_rate, epsilon);
+		elog(DEBUG1, "Iteration %2d rate %-8g [epsilon %-8g]", j, new_rate, epsilon);
 
 		/* It's not getting any better by adding numbers to infinity */
 		if (!isfinite(new_rate))
@@ -242,6 +242,7 @@ calculate_annualized_return(XirrState *state)
 	int			i;
 	double		debit = 0.0;
 	double		endvalue = 0.0;
+	double		power;
 	TimestampTz	mintime, maxtime;
 
 	/* Try to be clever, input is most likely sorted by time. */
@@ -263,5 +264,10 @@ calculate_annualized_return(XirrState *state)
 			mintime = time;
 	}
 
-	return pow(1 + endvalue/debit, TIME_PER_YEAR/(maxtime-mintime)) - 1;
+	power = TIME_PER_YEAR/(maxtime-mintime);
+
+	/* +/- swapped */
+	if (state->array[0].amount > 0)
+		power = -power;
+	return pow(1 + endvalue/debit, power) - 1;
 }
