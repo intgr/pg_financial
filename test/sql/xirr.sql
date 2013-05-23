@@ -29,3 +29,15 @@ SELECT xirr(amt, ts, -0.9999) FROM (VALUES(-100::float, '2013-01-01'::timestampt
 
 -- Window function
 SELECT xirr(amt, ts) OVER (ORDER BY ts) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (10, '2013-02-01'), (110, '2013-03-01')) x(amt, ts);
+
+-- Different guesses
+SELECT 0.1*i AS guess, xirr(amt, ts, 0.1*i) FROM (VALUES
+    (-10000, '2009-01-01'::timestamptz),
+    (-10000, '2010-01-01'),
+    ( 10000, '2011-01-01'),
+    ( 10000, '2012-01-01'),
+    (  1000, '2013-01-01')
+) x(amt, ts)
+CROSS JOIN generate_series(-10, 10) i
+GROUP BY i
+ORDER BY i;
