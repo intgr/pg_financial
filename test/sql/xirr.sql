@@ -26,3 +26,6 @@ SELECT xirr(amt, ts) FROM (SELECT amt, ts FROM transactions ORDER BY ts, random(
 SELECT xirr(amt, ts, null) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (20, '2014-01-01')) x(amt, ts);
 SELECT xirr(amt, ts, 0.1) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (20, '2014-01-01')) x(amt, ts);
 SELECT xirr(amt, ts, -0.9999) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (20, '2014-01-01')) x(amt, ts);
+
+-- Window function
+SELECT xirr(amt, ts) OVER (ORDER BY ts) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (10, '2013-02-01'), (110, '2013-03-01')) x(amt, ts);

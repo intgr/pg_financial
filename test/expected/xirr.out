@@ -71,3 +71,12 @@ SELECT xirr(amt, ts, -0.9999) FROM (VALUES(-100::float, '2013-01-01'::timestampt
  -0.8
 (1 row)
 
+-- Window function
+SELECT xirr(amt, ts) OVER (ORDER BY ts) FROM (VALUES(-100::float, '2013-01-01'::timestamptz), (10, '2013-02-01'), (110, '2013-03-01')) x(amt, ts);
+     xirr     
+--------------
+             
+           -1
+ 2.2427441504
+(3 rows)
+

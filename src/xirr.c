@@ -34,7 +34,7 @@ typedef struct XirrState
 
 extern Datum xirr_tstz_transfn(PG_FUNCTION_ARGS);
 extern Datum xirr_tstz_finalfn(PG_FUNCTION_ARGS);
-static double calculate_xirr(XirrState *state);
+static double calculate_xirr(XirrState *state, double guess);
 static double calculate_annualized_return(XirrState *state);
 
 /**** Implementation */
@@ -125,6 +125,8 @@ xirr_tstz_transfn(PG_FUNCTION_ARGS)
 /*
  * Aggregate finalize function. Takes the accumulated array and actually
  * calculates the result.
+ *
+ * May not change XirrState, otherwise it breaks window functions.
  */
 PG_FUNCTION_INFO_V1(xirr_tstz_finalfn);
 
@@ -133,6 +135,7 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
 {
 	XirrState  *state;
 	double		ret;
+	double		guess;
 
 	/* no input rows */
 	if (PG_ARGISNULL(0))
@@ -145,13 +148,15 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
 
 	/* Guess not provided as argument? */
 	if (isnan(state->guess))
-		state->guess = calculate_annualized_return(state);
+		guess = calculate_annualized_return(state);
+	else
+		guess = state->guess;
 
 	elog(DEBUG1, "Calculating XIRR over %d records, %ld MB memory, guess=%g",
 		 state->nelems, (long)((state->nelems*sizeof(XirrItem))/(1024*1024)),
-		 state->guess);
+		 guess);
 
-	ret = calculate_xirr(state);
+	ret = calculate_xirr(state, guess);
 
 	if (isnan(ret))
 		PG_RETURN_NULL();
@@ -175,10 +180,9 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
 #endif
 
 static double
-calculate_xirr(XirrState *state)
+calculate_xirr(XirrState *state, double guess)
 {
 	int 		i, j;
-	double		guess = state->guess;
 	TimestampTz time0 = state->array[0].time;
 
 	/* Newton's method */
