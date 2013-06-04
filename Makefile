@@ -24,3 +24,10 @@ endif
 
 PGXS := $(shell $(PG_CONFIG) --pgxs)
 include $(PGXS)
+
+install: install-readme
+
+install-readme:
+ifdef docdir
+	$(INSTALL_DATA) $(srcdir)/README.md '$(DESTDIR)$(docdir)/$(docmoduledir)/financial.md'
+endif # docdir
