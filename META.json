@@ -2,8 +2,8 @@
     "name": "financial",
     "abstract": "Financial aggregate functions",
     "description": "Functions and aggregates for financial calculations",
-    "version": "0.0.1",
-    "release_status": "unstable",
+    "version": "0.0.2",
+    "release_status": "testing",
 
     "maintainer": "Marti Raudsepp <marti@juffo.org>",
     "generated_by": "Marti Raudsepp <marti@juffo.org>",
@@ -14,7 +14,7 @@
     },
     "tags": [
         "financial", "finance", "rate of return", "xirr", "aggregate",
-        "functions"
+        "functions", "excel", "investment"
     ],
     "resources": {
         "bugtracker": {
