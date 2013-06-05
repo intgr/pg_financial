@@ -8,12 +8,12 @@
     "maintainer": "Marti Raudsepp <marti@juffo.org>",
     "generated_by": "Marti Raudsepp <marti@juffo.org>",
     "provides": {
-      "financial": {
-         "abstract": "Financial aggregate functions",
-         "file": "sql/financial.sql",
-         "docfile": "README.md",
-         "version": "0.0.2"
-      }
+        "financial": {
+            "abstract": "Financial aggregate functions",
+            "file": "sql/financial.sql",
+            "docfile": "README.md",
+            "version": "0.0.2"
+        }
     },
     "license": {
         "PostgreSQL": "http://www.postgresql.org/about/licence/"
