@@ -29,5 +29,6 @@ install: install-readme
 
 install-readme:
 ifdef docdir
+	$(MKDIR_P) '$(DESTDIR)$(docdir)/$(docmoduledir)'
 	$(INSTALL_DATA) $(srcdir)/README.md '$(DESTDIR)$(docdir)/$(docmoduledir)/financial.md'
 endif # docdir
