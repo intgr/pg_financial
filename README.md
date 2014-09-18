@@ -64,11 +64,21 @@ Because XIRR needs to do multiple passes over input data, all inputs to the
 aggregate function are held in memory (16 bytes per row). Beware that this can
 cause the server to run out of memory with extremely large data sets.
 
+Changelog
+---------
+
+1.0.0 (2014-09-18)
+
+* First stable release, fixes two Makefile issues
+
+0.0.2 (2013-06-05)
+
+* First release, contains `xirr` aggregate function
 
 Copyright and License
 ---------------------
 
-Copyright (c) 2013 Marti Raudsepp <marti@juffo.org>
+Copyright (c) 2013-2014 Marti Raudsepp <marti@juffo.org>
 
 pg\_financial and all related files are available under [The PostgreSQL
 License](http://www.opensource.org/licenses/PostgreSQL). See LICENSE file for

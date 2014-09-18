@@ -1,5 +1,5 @@
 # "financial" extension
 comment = 'Financial aggregate functions'
-default_version = '0.0.2'
+default_version = '1.0.0'
 module_pathname = '$libdir/financial'
 relocatable = true

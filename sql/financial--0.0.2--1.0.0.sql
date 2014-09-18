@@ -1,0 +1,2 @@
+-- 1.0.0 is a bugfix release.
+-- No changes in SQL interfaces.
