@@ -31,7 +31,7 @@ troubleshooting](https://wiki.postgresql.org/wiki/Extension_build_troubleshootin
 
 The basic form of the XIRR function is: `xirr(amounts, dates [, guess])`
 
-Since XIRR is fundamentally an imprecise function, `payments` is of type float8
+Since XIRR is fundamentally an imprecise function, `amounts` is of type float8
 (double precision). `dates` is timestamp with time zone.
 
 For example, if table `transaction` has columns `amount` and `time`, do this:
