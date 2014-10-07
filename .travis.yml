@@ -1,0 +1,17 @@
+language: c
+# addons.postgresql section: does not support multiple values :(
+#addons:
+#    postgresql: "9.3"
+env:
+    - PG=9.3
+    - PG=9.2
+    - PG=9.1
+install:
+    - sudo /etc/init.d/postgresql stop
+    - sudo apt-get install postgresql-$PG postgresql-server-dev-$PG
+    - sudo /etc/init.d/postgresql start $PG
+script:
+    - psql postgres -xA -c 'select version()'
+    - make 
+    - sudo make install
+    - make installcheck || (cat regression.diffs && false)
