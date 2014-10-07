@@ -92,10 +92,10 @@ xirr_tstz_transfn(PG_FUNCTION_ARGS)
 	if (amount == 0.0)
 		PG_RETURN_POINTER(state);
 
-	time =  PG_GETARG_TIMESTAMPTZ(2);
+	time = PG_GETARG_TIMESTAMPTZ(2);
 
-	/* Coalesce multiple payments on same date */
-	if (time == state->array[state->nelems-1].time)
+	/* Coalesce payment with the previous one if it's on the same time */
+	if (state->nelems > 0 && time == state->array[state->nelems-1].time)
 	{
 		state->array[state->nelems-1].amount += amount;
 		PG_RETURN_POINTER(state);
