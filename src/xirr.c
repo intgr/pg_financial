@@ -36,8 +36,8 @@ typedef struct XirrState
 
 extern Datum xirr_tstz_transfn(PG_FUNCTION_ARGS);
 extern Datum xirr_tstz_finalfn(PG_FUNCTION_ARGS);
-static double calculate_xirr(XirrState *state, double guess);
-static double calculate_annualized_return(XirrState *state);
+static double calculate_xirr(const XirrState *state, double guess);
+static double calculate_annualized_return(const XirrState *state);
 
 /**** Implementation */
 
@@ -135,7 +135,7 @@ PG_FUNCTION_INFO_V1(xirr_tstz_finalfn);
 Datum
 xirr_tstz_finalfn(PG_FUNCTION_ARGS)
 {
-	XirrState  *state;
+	const XirrState *state;
 	double		ret;
 	double		guess;
 
@@ -182,7 +182,7 @@ xirr_tstz_finalfn(PG_FUNCTION_ARGS)
 #endif
 
 static double
-calculate_xirr(XirrState *state, double guess)
+calculate_xirr(const XirrState *state, double guess)
 {
 	int 		i, j;
 	TimestampTz time0 = state->array[0].time;
@@ -237,7 +237,7 @@ calculate_xirr(XirrState *state, double guess)
  * ((1+sum(amount)/-sum(case when amount<0 then amount end))^(365.0/(max(ts::date)-min(ts::date))))-1
  */
 static double
-calculate_annualized_return(XirrState *state)
+calculate_annualized_return(const XirrState *state)
 {
 	int			i;
 	double		debit = 0.0;
