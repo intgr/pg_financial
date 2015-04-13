@@ -3,11 +3,14 @@ language: c
 #addons:
 #    postgresql: "9.3"
 env:
+    - PG=9.4
     - PG=9.3
     - PG=9.2
     - PG=9.1
 install:
     - sudo /etc/init.d/postgresql stop
+    # Optimization: only update 3rd party repos, not Ubuntu's own
+    - sudo apt-get update -o Dir::Etc::sourcelist=/dev/null
     - sudo apt-get install postgresql-$PG postgresql-server-dev-$PG
     - sudo /etc/init.d/postgresql start $PG
 script:
