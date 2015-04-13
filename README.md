@@ -1,5 +1,7 @@
 PostgreSQL Financial Extension
 ==============================
+[![PGXN version](https://badge.fury.io/pg/financial.svg)](https://badge.fury.io/pg/financial)
+[![Build Status](https://travis-ci.org/intgr/pg_financial.svg?branch=master)](https://travis-ci.org/intgr/pg_financial)
 
 This is a PostgreSQL extension for financial calculations.
 
@@ -78,7 +80,7 @@ Changelog
 Copyright and License
 ---------------------
 
-Copyright (c) 2013-2014 Marti Raudsepp <marti@juffo.org>
+Copyright (c) 2013-2015 Marti Raudsepp <marti@juffo.org>
 
 pg\_financial and all related files are available under [The PostgreSQL
 License](http://www.opensource.org/licenses/PostgreSQL). See LICENSE file for
