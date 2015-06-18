@@ -2,7 +2,7 @@
     "name": "financial",
     "abstract": "Financial aggregate functions",
     "description": "Functions and aggregates for financial calculations",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "release_status": "stable",
 
     "maintainer": "Marti Raudsepp <marti@juffo.org>",
@@ -12,7 +12,7 @@
             "abstract": "Financial aggregate functions",
             "file": "sql/financial.sql",
             "docfile": "README.md",
-            "version": "1.0.0"
+            "version": "1.0.1"
         }
     },
     "license": {

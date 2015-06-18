@@ -69,6 +69,12 @@ cause the server to run out of memory with extremely large data sets.
 Changelog
 ---------
 
+1.0.1 (2015-06-18)
+
+* Fix read of uninitialized data
+* Implemented continuous integration via Travis-CI
+* Minor tweaks to documentation and code
+
 1.0.0 (2014-09-18)
 
 * First stable release, fixes two Makefile issues
