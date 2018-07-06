@@ -4,7 +4,7 @@
  * xirr.c
  *	  Irregular Internal Rate of Return
  *
- * Copyright (c) 2013-2015 Marti Raudsepp <marti@juffo.org>
+ * Copyright (c) 2013-2018 Marti Raudsepp <marti@juffo.org>
  *
  *-------------------------------------------------------------------------
  */
