@@ -3,6 +3,9 @@ language: c
 #addons:
 #    postgresql: "9.3"
 env:
+    - PG=10
+    - PG=9.6
+    - PG=9.5
     - PG=9.4
     - PG=9.3
     - PG=9.2
@@ -12,7 +15,12 @@ install:
     # Optimization: only update 3rd party repos, not Ubuntu's own
     - sudo apt-get update -o Dir::Etc::sourcelist=/dev/null
     - sudo apt-get install postgresql-$PG postgresql-server-dev-$PG
-    - sudo /etc/init.d/postgresql start $PG
+    # Force correct port
+    - sudo sed -Ei -e 's/^#?port =.+$/port = 5432/' /etc/postgresql/$PG/main/postgresql.conf
+    - sudo /etc/init.d/postgresql restart $PG
+    - sudo pg_lsclusters
+    # Ffff, need to create a user too. Except when Travis has already created it.
+    - sudo -u postgres createuser travis --superuser || true
 script:
     - psql postgres -xA -c 'select version()'
     - make 
