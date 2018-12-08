@@ -15,7 +15,7 @@ Functions provided:
 Installation
 ------------
 
-`pg_financial` is tested with PostgreSQL versions from 9.1 to 10.
+`pg_financial` is tested with PostgreSQL versions from 9.1 to 11.
 
 To build and install this extension, simply run:
 
@@ -71,7 +71,7 @@ cause the server to run out of memory with extremely large data sets.
 Changelog
 ---------
 
-Unreleased:
+Unreleased (2018):
 
 * Run unit tests also with PostgreSQL versions 9.5 ... 11
   (no code changes were necessary)
