@@ -3,6 +3,7 @@ language: c
 #addons:
 #    postgresql: "9.3"
 env:
+    - PG=11
     - PG=10
     - PG=9.6
     - PG=9.5
@@ -14,6 +15,8 @@ install:
     - sudo /etc/init.d/postgresql stop
     # Optimization: only update 3rd party repos, not Ubuntu's own
     - sudo apt-get update -o Dir::Etc::sourcelist=/dev/null
+    # Uninstall 9.2: work around issue https://github.com/travis-ci/travis-ci/issues/5737
+    - sudo apt-get remove postgresql-9.2 postgresql-client-9.2
     - sudo apt-get install postgresql-$PG postgresql-server-dev-$PG
     # Force correct port
     - sudo sed -Ei -e 's/^#?port =.+$/port = 5432/' /etc/postgresql/$PG/main/postgresql.conf
