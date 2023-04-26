@@ -1,0 +1,44 @@
+name: Tests
+on:
+  push:
+    branches: [master]
+  pull_request:
+  schedule:
+    # 16:21 UTC on Tuesdays
+    - cron: "21 16 * * TUE"
+  repository_dispatch:
+    types: [tests]
+
+env:
+  DOCKER_BUILDKIT: 1
+jobs:
+  build-test:
+    # https://wiki.postgresql.org/wiki/Apt only has packages for ubuntu LTS versions
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        postgresql: [10, 11, 12, 13, 14, 15]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install PostgreSQL
+        run:
+          - apt-get install postgresql-common
+          - sh /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+          # Optimization: only update 3rd party repos, not Ubuntu's own
+          - apt-get update -o Dir::Etc::sourcelist=/dev/null
+          # Uninstall 9.2: work around issue https://github.com/travis-ci/travis-ci/issues/5737
+          - apt-get install postgresql-${{ matrix.postgresql }} postgresql-server-dev-${{ matrix.postgresql }}
+          # Force correct port
+#          - sudo sed -Ei -e 's/^#?port =.+$/port = 5432/' /etc/postgresql/$PG/main/postgresql.conf
+#          - sudo /etc/init.d/postgresql restart $PG
+          - pg_lsclusters
+#          - sudo -u postgres createuser tests --superuser || true
+
+      - name: Build
+        run:
+          - psql postgres -xA -c 'select version()'
+          - make
+          - sudo make install
+      - name: Run installcheck
+        run:
+          - make installcheck || (cat regression.diffs && false)

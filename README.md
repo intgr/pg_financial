@@ -71,8 +71,9 @@ cause the server to run out of memory with extremely large data sets.
 Changelog
 ---------
 
-Unreleased (2018):
+Unreleased (2023):
 
+* Migrate from Travis to GitHub Actions CI
 * Run unit tests also with PostgreSQL versions 9.5 ... 11
   (no code changes were necessary)
 
