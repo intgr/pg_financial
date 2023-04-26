@@ -203,7 +203,7 @@ calculate_xirr(const XirrState *state, double guess)
 			double exp = pow(r, years);
 
 			result += val / exp;
-			deriv -= years * val / (exp * r); /* (exp * r) = pow(r, years + 1) */
+			deriv -= years * val / (exp * r); /* Optimization: (exp * r) = pow(r, years + 1) */
 		}
 
 		new_rate = guess - (result / deriv);
