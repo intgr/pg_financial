@@ -17,13 +17,18 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        # TODO: Add more Postgres versions
-        postgresql: [14]
+        # Test with v14 first, for faster results: it's bundled already with GitHub image
+        postgresql: [14, 10, 11, 12, 13, 15]
     steps:
       - uses: actions/checkout@v3
       - name: Install PostgreSQL
         run: |
-          echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+          # If needed, uninstall PostgreSQL v14 that GitHub supplies
+          if test "${{ matrix.postgresql }}" != 14; then
+              sudo pg_dropcluster 14 main --stop
+              sudo apt-get remove postgresql-14 postgresql-client-14
+              echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+          fi
           sudo apt-get install -y \
               postgresql-${{ matrix.postgresql }} \
               postgresql-server-dev-${{ matrix.postgresql }}
