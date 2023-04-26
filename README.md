@@ -15,7 +15,7 @@ Functions provided:
 Installation
 ------------
 
-`pg_financial` is tested with PostgreSQL versions from 9.1 to 11.
+`pg_financial` is tested with PostgreSQL versions from 10 to 15.
 
 To build and install this extension, simply run:
 
