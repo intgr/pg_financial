@@ -94,7 +94,7 @@ Unreleased (2023):
 Copyright and License
 ---------------------
 
-Copyright (c) 2013-2018 Marti Raudsepp <marti@juffo.org>
+Copyright (c) 2013-2023 Marti Raudsepp <marti@juffo.org>
 
 pg\_financial and all related files are available under [The PostgreSQL
 License](http://www.opensource.org/licenses/PostgreSQL). See LICENSE file for
