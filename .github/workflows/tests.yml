@@ -37,5 +37,6 @@ jobs:
         run: |
           sudo pg_ctlcluster ${{ matrix.postgresql }} main start
           sudo pg_lsclusters
+          sudo -u postgres createuser runner --superuser
           psql postgres -xA -c 'select version()'
           make installcheck || (cat regression.diffs && false)
