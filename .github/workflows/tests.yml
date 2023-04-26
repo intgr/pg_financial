@@ -33,7 +33,6 @@ jobs:
 
       - name: Build
         run: |
-          psql postgres -xA -c 'select version()'
           make
           sudo make install
 
@@ -41,4 +40,5 @@ jobs:
         run: |
           sudo pg_ctlcluster ${{ matrix.postgresql }} main start
           sudo pg_lsclusters
+          psql postgres -xA -c 'select version()'
           make installcheck || (cat regression.diffs && false)
