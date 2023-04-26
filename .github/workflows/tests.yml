@@ -23,15 +23,12 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install PostgreSQL
         run: |
-          sudo apt-get install postgresql-common gnupg --no-install-recommends
           echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
           # Optimization: only update 3rd party repos, not Ubuntu's own
           sudo apt-get install -y postgresql-${{ matrix.postgresql }} postgresql-server-dev-${{ matrix.postgresql }}
           # Force correct port
           # - sudo sed -Ei -e 's/^#?port =.+$/port = 5432/' /etc/postgresql/$PG/main/postgresql.conf
           # - sudo /etc/init.d/postgresql restart $PG
-          pg_ctlcluster ${{ matrix.postgresql }} main start
-          pg_lsclusters
           # - sudo -u postgres createuser tests --superuser || true
 
       - name: Build
@@ -39,6 +36,9 @@ jobs:
           psql postgres -xA -c 'select version()'
           make
           sudo make install
+
       - name: Run installcheck
         run: |
+          sudo pg_ctlcluster ${{ matrix.postgresql }} main start
+          sudo pg_lsclusters
           make installcheck || (cat regression.diffs && false)
