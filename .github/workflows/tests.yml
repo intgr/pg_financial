@@ -24,8 +24,10 @@ jobs:
       - name: Install PostgreSQL
         run: |
           # If needed, uninstall PostgreSQL v14 that GitHub supplies
-          test "${{ matrix.postgresql }}" != 14 && \
+          if test "${{ matrix.postgresql }}" != 14; then
+              pg_dropcluster 14 main --stop
               sudo apt-get remove postgresql-14 postgresql-client-14
+          fi
 
           echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
           sudo apt-get install -y \
