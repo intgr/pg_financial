@@ -74,7 +74,7 @@ Changelog
 Unreleased (2023):
 
 * Migrate from Travis to GitHub Actions CI
-* Run unit tests also with PostgreSQL versions 9.5 ... 11
+* Run CI tests with PostgreSQL versions 10 ... 15
   (no code changes were necessary)
 
 1.0.1 (2015-06-18)
