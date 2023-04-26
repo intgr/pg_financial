@@ -1,7 +1,7 @@
 PostgreSQL Financial Extension
 ==============================
 [![PGXN version](https://badge.fury.io/pg/financial.svg)](https://badge.fury.io/pg/financial)
-[![Build Status](https://travis-ci.org/intgr/pg_financial.svg?branch=master)](https://travis-ci.org/intgr/pg_financial)
+[![Tests status](https://github.com/intgr/pg_financial/workflows/Tests/badge.svg?branch=master)](https://github.com/intgr/pg_financial/actions?query=workflow:Tests)
 
 This is a PostgreSQL extension for financial calculations.
 
@@ -71,8 +71,9 @@ cause the server to run out of memory with extremely large data sets.
 Changelog
 ---------
 
-Unreleased (2018):
+Unreleased (2023):
 
+* Migrate from Travis to GitHub Actions CI
 * Run unit tests also with PostgreSQL versions 9.5 ... 11
   (no code changes were necessary)
 

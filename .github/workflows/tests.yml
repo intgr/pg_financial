@@ -1,0 +1,42 @@
+name: Tests
+on:
+  push:
+    branches: [master]
+  pull_request:
+  schedule:
+    # 16:21 UTC on Tuesdays
+    - cron: "21 16 * * TUE"
+  repository_dispatch:
+    types: [tests]
+
+env:
+  DOCKER_BUILDKIT: 1
+jobs:
+  build-test:
+    # https://wiki.postgresql.org/wiki/Apt only has packages for ubuntu LTS versions
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        # TODO: Add more Postgres versions
+        postgresql: [14]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install PostgreSQL
+        run: |
+          echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+          sudo apt-get install -y \
+              postgresql-${{ matrix.postgresql }} \
+              postgresql-server-dev-${{ matrix.postgresql }}
+
+      - name: Build
+        run: |
+          make
+          sudo make install
+
+      - name: Run installcheck
+        run: |
+          sudo pg_ctlcluster ${{ matrix.postgresql }} main start
+          sudo pg_lsclusters
+          sudo -H -u postgres createuser runner --superuser
+          psql postgres -xA -c 'select version()'
+          make installcheck || (cat regression.diffs && false)
