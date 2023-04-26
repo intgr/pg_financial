@@ -17,7 +17,8 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        postgresql: [10, 11, 12, 13, 14, 15]
+        # Test with v14 first, for faster results: it's bundled already with GitHub image
+        postgresql: [14, 10, 11, 12, 13, 15]
     steps:
       - uses: actions/checkout@v3
       - name: Install PostgreSQL
@@ -26,9 +27,8 @@ jobs:
           if test "${{ matrix.postgresql }}" != 14; then
               sudo pg_dropcluster 14 main --stop
               sudo apt-get remove postgresql-14 postgresql-client-14
+              echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
           fi
-
-          echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
           sudo apt-get install -y \
               postgresql-${{ matrix.postgresql }} \
               postgresql-server-dev-${{ matrix.postgresql }}
