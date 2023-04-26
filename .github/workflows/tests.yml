@@ -24,12 +24,9 @@ jobs:
       - name: Install PostgreSQL
         run: |
           echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
-          # Optimization: only update 3rd party repos, not Ubuntu's own
           sudo apt-get install -y postgresql-${{ matrix.postgresql }} postgresql-server-dev-${{ matrix.postgresql }}
-          # Force correct port
-          # - sudo sed -Ei -e 's/^#?port =.+$/port = 5432/' /etc/postgresql/$PG/main/postgresql.conf
-          # - sudo /etc/init.d/postgresql restart $PG
-          # - sudo -u postgres createuser tests --superuser || true
+          # This is installed by default, get rid of it
+          apt-get autoremove postgresql-server-dev-14
 
       - name: Build
         run: |
