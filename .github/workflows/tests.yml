@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
 #        postgresql: [10, 11, 12, 13, 14, 15]
-        postgresql: [10]
+        postgresql: [14]
     steps:
       - uses: actions/checkout@v3
       - name: Install PostgreSQL
@@ -26,7 +26,7 @@ jobs:
           echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
           sudo apt-get install -y postgresql-${{ matrix.postgresql }} postgresql-server-dev-${{ matrix.postgresql }}
           # This is installed by default, get rid of it
-          sudo apt-get autoremove postgresql-server-dev-14
+#          sudo apt-get autoremove postgresql-server-dev-14
 
       - name: Build
         run: |
