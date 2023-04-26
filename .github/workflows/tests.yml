@@ -25,7 +25,7 @@ jobs:
         run: |
           # If needed, uninstall PostgreSQL v14 that GitHub supplies
           if test "${{ matrix.postgresql }}" != 14; then
-              pg_dropcluster 14 main --stop
+              sudo pg_dropcluster 14 main --stop
               sudo apt-get remove postgresql-14 postgresql-client-14
           fi
 
