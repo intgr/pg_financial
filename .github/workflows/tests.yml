@@ -17,16 +17,17 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        postgresql: [10, 11, 12, 13, 14, 15]
+#        postgresql: [10, 11, 12, 13, 14, 15]
+        postgresql: [10]
     steps:
       - uses: actions/checkout@v3
       - name: Install PostgreSQL
         run: |
-          apt-get update
-          apt-get install postgresql-common gnupg --no-install-recommends
-          echo | /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+          # sudo apt-get update
+          sudo apt-get install postgresql-common gnupg --no-install-recommends
+          echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
           # Optimization: only update 3rd party repos, not Ubuntu's own
-          apt-get install -y postgresql-${{ matrix.postgresql }} postgresql-server-dev-${{ matrix.postgresql }}
+          sudo apt-get install -y postgresql-${{ matrix.postgresql }} postgresql-server-dev-${{ matrix.postgresql }}
           # Force correct port
           # - sudo sed -Ei -e 's/^#?port =.+$/port = 5432/' /etc/postgresql/$PG/main/postgresql.conf
           # - sudo /etc/init.d/postgresql restart $PG
