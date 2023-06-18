@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install PostgreSQL
         run: |
+          sudo apt-get update
           # If needed, uninstall PostgreSQL v14 that GitHub supplies
           if test "${{ matrix.postgresql }}" != 14; then
               sudo pg_dropcluster 14 main --stop
