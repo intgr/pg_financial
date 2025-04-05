@@ -1,7 +1,7 @@
 PostgreSQL Financial Extension
 ==============================
 [![PGXN version](https://badge.fury.io/pg/financial.svg)](https://badge.fury.io/pg/financial)
-[![Tests status](https://github.com/intgr/pg_financial/workflows/Tests/badge.svg?branch=master)](https://github.com/intgr/pg_financial/actions?query=workflow:Tests)
+[![Tests status](https://github.com/intgr/pg_financial/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/intgr/pg_financial/actions/workflows/tests.yml)
 
 This is a PostgreSQL extension for financial calculations.
 
