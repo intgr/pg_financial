@@ -71,10 +71,10 @@ cause the server to run out of memory with extremely large data sets.
 Changelog
 ---------
 
-Unreleased (2023):
+Unreleased (2025):
 
 * Migrate from Travis to GitHub Actions CI
-* Run CI tests with PostgreSQL versions 10 ... 15
+* Run CI tests with PostgreSQL versions 13 ... 17
   (no code changes were necessary)
 
 1.0.1 (2015-06-18)

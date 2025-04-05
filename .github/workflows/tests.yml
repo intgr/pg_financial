@@ -14,23 +14,24 @@ env:
 jobs:
   build-test:
     # https://wiki.postgresql.org/wiki/Apt only has packages for ubuntu LTS versions
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        # Test with v14 first, for faster results: it's bundled already with GitHub image
-        postgresql: [14, 10, 11, 12, 13, 15]
+        # Test with v16 first, for faster results: it's bundled already with GitHub image
+        postgresql: [16, 13, 14, 15, 17]
     steps:
       - uses: actions/checkout@v3
       - name: Install PostgreSQL
         run: |
           sudo apt-get update
-          # If needed, uninstall PostgreSQL v14 that GitHub supplies
-          if test "${{ matrix.postgresql }}" != 14; then
-              sudo pg_dropcluster 14 main --stop
-              sudo apt-get remove postgresql-14 postgresql-client-14
+          # If needed, uninstall PostgreSQL v16 that GitHub supplies
+          if test "${{ matrix.postgresql }}" != 16; then
+              sudo pg_dropcluster 16 main --stop
+              sudo apt-get remove postgresql-16 postgresql-client-16
               echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
           fi
           sudo apt-get install -y \
+              clang-19 \
               postgresql-${{ matrix.postgresql }} \
               postgresql-server-dev-${{ matrix.postgresql }}
 
