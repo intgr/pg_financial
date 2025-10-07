@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         # Test with v16 first, for faster results: it's bundled already with GitHub image
-        postgresql: [16, 13, 14, 15, 17]
+        postgresql: [16, 13, 14, 15, 17, 18]
     steps:
       - uses: actions/checkout@v3
       - name: Install PostgreSQL
