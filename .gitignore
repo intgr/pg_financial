@@ -4,3 +4,4 @@ sql/financial--?.?.?.sql
 regression.diffs
 regression.out
 results
+.idea/
